@@ -1,7 +1,8 @@
 """
 The main app logic.
 """
-
+import time
+from datetime import datetime
 import telebot
 from telebot import types
 import config
@@ -11,6 +12,16 @@ bot = telebot.TeleBot(config.TOKEN)
 
 print(bnb_value())
 print(xrp_value())
+
+
+def timenow():
+    while True:
+        now = datetime.now()
+        dt_string = now.strftime("%H:%M")
+        if (dt_string == "13:30"):
+            time.sleep(60)
+            return dt_string
+        break
 
 
 @bot.message_handler(content_types=['text'], commands=['start'])
@@ -23,6 +34,8 @@ def send_bnb(message):
                      "Добро пожаловать в CryptoAlarmBot, в данном боте можно отслеживать курс актуальных криптовалют "
                      "и получать уведомления о коррекции/повышении/понижении курса. Выберете криптовалюту.",
                      reply_markup=keyboard)
+    chat_id = config.my_id
+    bot.send_message(message.chat_id, 'Wake up!')
 
 
 @bot.message_handler(content_types=['text'])
@@ -41,4 +54,4 @@ def send_auth(message):
     pass
 
 
-bot.polling()
+bot.polling(none_stop=True)
